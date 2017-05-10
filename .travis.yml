@@ -1,0 +1,23 @@
+sudo: false
+language: python
+python: 3.6
+env:
+  - TOXENV=py36
+  - TOXENV=py34
+  - TOXENV=py33
+  - TOXENV=py27
+  - TOXENV=pypy
+  - TOXENV=flake8
+install: pip install -U tox
+script: tox -e ${TOXENV}
+deploy:
+  provider: pypi
+  skip_upload_docs: true
+  distributions: sdist bdist_wheel
+  user: pmclanahan
+  password:
+    secure: mfgg2IsbI6bt4ZPX3rVy60Z8qP7feW9ID5pZTP/QowGQL0Ah9TapIwW7I4PFEQD5IWkLFjDWYTnogaREO4x04WlvQL/W2Tu9VNd4mg8l56O9r0d21REKvoBkWi4g7qY25ZIFyCPETNChbedlTB/5PEzcOcjfez9mQcT8aIB23mW/78tx0vx/U+s5kgAX6Zk2n3SWf0MVO5605iy30pSC/2JVwfoO7C601dLrR4dEHCr8R6QXtsmxmmReR93o4ROWmffnDrv7BFNM/F0SeecFnr9LGPhyGjPQA8O+Ntkx3Yx5/UCwWEXLAlsIC59hWTPUarWYaiZlFin4KwepNHuZ5pMSqf+LQKrOWPtu+jwV2+P2BUGPWCOOgRAjSQewu2CB5/qT6boLyniAP1E1pId9gGhvwh9xpb+G4YpheTVfyL/TV+xML6/Rph82CvxDLXfy3dkglXYs01tDn1ply5mlpsAeUvXaJSBV5RsB11XM72X7Djy1aPVyDKf8Jd5Ak6sUMlQYaf0k01ani7ctOXr487sDqGR8rG5vUh7P0VxnBtRNhZIeAcG5q8ywLN+dkW6jmD0NLM7WiRNHjUuoC8KwfQ7u+dizWpe8e6DpV1lBxOypOIWKvKkWADKnAZ9NoOjPTB1c6H5Vn4xq7fN1SHj8AGdHVw+0SX5DH5rBz6gxbZY=
+  on:
+    tags: true
+    repo: pmac/envcat
+    condition: $TOXENV == py27
