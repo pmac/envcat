@@ -22,6 +22,7 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
+VERSION := $(shell ./envcat.py --version)
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -79,11 +80,10 @@ release: clean ## package and upload a release
 	python setup.py bdist_wheel upload
 
 release-docker: clean ## build and upload a docker image
-	version=$(shell ./envcat.py --version)
 	docker build -t mozmeao/envcat:latest .
 	docker push mozmeao/envcat:latest
-	docker tag mozmeao/envcat:latest mozmeao/envcat:$(version)
-	docker push mozmeao/envcat:$(version)
+	docker tag mozmeao/envcat:latest mozmeao/envcat:$(VERSION)
+	docker push mozmeao/envcat:$(VERSION)
 
 dist: clean ## builds source and wheel package
 	python setup.py sdist
