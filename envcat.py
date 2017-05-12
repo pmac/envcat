@@ -8,7 +8,7 @@ import os.path
 import re
 
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 ENV_KEY_RE = re.compile(r'^[a-z][a-z0-9_]*$', flags=re.IGNORECASE)
 
 
