@@ -70,11 +70,20 @@ def print_env_vars(all_vars, oneline=False):
 
 def main():
     parser = argparse.ArgumentParser(description='Merge env file values')
-    parser.add_argument('files', metavar='FILE', nargs='+',
+    parser.add_argument('files', metavar='FILE', nargs='*',
                         help='env file paths')
     parser.add_argument('--oneline', action='store_true', default=False,
                         help='Output the env variables on one line')
+    parser.add_argument('--version', action='store_true', default=False,
+                        help='Output the version and exit')
     args = parser.parse_args()
+    if args.version:
+        print(__version__)
+        return
+
+    if not args.files:
+        parser.error('At least one env file is required')
+
     print_env_vars(get_env_vars_list(args.files), args.oneline)
 
 
