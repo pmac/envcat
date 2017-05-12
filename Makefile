@@ -1,4 +1,4 @@
-.PHONY: clean clean-test clean-pyc clean-build docs help
+.PHONY: clean clean-test clean-pyc clean-build docs help release release-docker
 .DEFAULT_GOAL := help
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
@@ -48,18 +48,17 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr htmlcov/
 
 lint: ## check style with flake8
-	flake8 envcat tests
+	flake8 envcat.py tests
 
 test: ## run tests quickly with the default Python
 	py.test
-	
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
 	coverage run --source envcat -m pytest
-	
+
 		coverage report -m
 		coverage html
 		$(BROWSER) htmlcov/index.html
@@ -67,7 +66,7 @@ coverage: ## check code coverage quickly with the default Python
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/envcat.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ envcat
+	sphinx-apidoc -o docs/ .
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
@@ -78,6 +77,13 @@ servedocs: docs ## compile the docs watching for changes
 release: clean ## package and upload a release
 	python setup.py sdist upload
 	python setup.py bdist_wheel upload
+
+release-docker: clean ## build and upload a docker image
+	version=$(shell ./envcat.py --version)
+	docker build -t mozmeao/envcat:latest .
+	docker push mozmeao/envcat:latest
+	docker tag mozmeao/envcat:latest mozmeao/envcat:$(version)
+	docker push mozmeao/envcat:$(version)
 
 dist: clean ## builds source and wheel package
 	python setup.py sdist
